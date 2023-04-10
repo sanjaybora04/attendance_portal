@@ -83,7 +83,7 @@ const UpdateProfile = () => {
                                         type="text"
                                         className="form-control"
                                         id="inputClass"
-                                        placeholder="Enter Class"
+                                        placeholder="Enter Semester"
                                         value={Class}
                                         onChange={event => setClass(event.target.value)}
                                     />
