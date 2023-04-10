@@ -4,14 +4,13 @@ from match_face import match
  
 app = Flask(__name__)
 
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # Set request payload limit to 10mb
 
 
 @app.route('/comparefaces',methods=['POST'])
 def comparefaces():
-    img1 = flask.request.files.get('img1')
-    img1.save('image.png')
-    img2 = flask.request.files.get('img2')
-    m = match(img1,img2)
+    jsondata = flask.request.get_json()
+    m = match(jsondata['img1'],jsondata['img2'])
     return(jsonify({'match':m}))
 
  

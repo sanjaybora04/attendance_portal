@@ -42,20 +42,16 @@ router.post("/markAttendance", fetchuser, (req, res) => {
                     if(!req.user.image){
                         return res.json({msg:"Please set your profile image first"})
                     }
-
-                    let img1 = req.user.image 
-                    img1 = new Blob([img1]);
-                    let img2 = req.body.image 
-                    img2 = new Blob([img2])
-                
-                    
-                    const formData = new FormData()
-                    formData.append('img1',img1,{filename:"img1.jpeg"})
-                    formData.append('img2',img2,{filename:"img2.jpeg"})
                     
                     fetch('http://localhost:7000/comparefaces', {
                         method: 'POST',
-                        body: formData
+                        headers: {
+                            'Content-Type': 'application/json'
+                          },
+                        body: JSON.stringify({
+                            img1: req.user.image,
+                            img2: req.body.image
+                        })
                     }).then((response) => response.json())
                     .then((data) => {
                         if(data.match==true){
