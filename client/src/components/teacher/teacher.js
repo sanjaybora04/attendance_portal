@@ -15,7 +15,7 @@ const Teacher = () => {
   return (
     <div>
       <AddSubject />
-      <button typ="button" className="btn btn-primary brn-sm" onClick={()=>{localStorage.setItem('authtoken','')}}>Log Out</button>
+      <button typ="button" className="btn btn-primary brn-sm" onClick={()=>{localStorage.setItem('authtoken','');window.location.href='/'}}>Log Out</button>
       {subjects.map((subject) => {
         return <SubjectItem subject={subject} />
       })}

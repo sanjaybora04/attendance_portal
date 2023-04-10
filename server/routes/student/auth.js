@@ -22,7 +22,11 @@ router.post('/signup', (req, res) => {
           res.status(401).json({error:err})
         }
         else{
-          const authtoken = jwt.sign(student.toJSON(), JWT_SECRET);
+          student = {
+            _id:student._id,
+            usertype:'student'
+          }
+          const authtoken = jwt.sign(student, JWT_SECRET);
           res.json({ authtoken })
         }
       });
@@ -33,7 +37,11 @@ router.post('/signup', (req, res) => {
 router.post('/login', (req, res) => {
   Student.findOne({ email: req.body.username, password: req.body.password },function(err,student){
     if(student){
-      const authtoken = jwt.sign(student.toJSON(), JWT_SECRET);
+      student = {
+        _id: student._id,
+        usertype: 'student'
+    }
+      const authtoken = jwt.sign(student, JWT_SECRET);
       res.json({ authtoken })
     }
     else{

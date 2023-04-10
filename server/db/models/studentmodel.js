@@ -5,11 +5,7 @@ const studentSchema = new Schema({
     name: String,
     email: String,
     class: String,
-    image: {
-        path:String,
-        originalname:String,
-        mimetype:String
-    },
+    image: String,
     subjects: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'subject'

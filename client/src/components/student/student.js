@@ -29,7 +29,7 @@ const Student = () => {
     return (
         <div>
             <UpdateProfile />
-            <button typ="button" className="btn btn-primary brn-sm" onClick={()=>{localStorage.setItem('authtoken','')}}>Log Out</button>
+            <button typ="button" className="btn btn-primary brn-sm" onClick={()=>{localStorage.setItem('authtoken','');window.location.href='/'}}>Log Out</button>
             {subjects.map((subject) => {
                 return <li key = {subject._id} className="list-group-item">
                   <div className="d-flex justify-content-between align-items-center">

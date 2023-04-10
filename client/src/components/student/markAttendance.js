@@ -12,16 +12,16 @@ const MarkAttendance = ({subject_id}) => {
         // Take picture
         capture()
 
-        const formData = new FormData();
-        formData.append('image', image);
-        formData.append('subject_id', subject_id);
-
         fetch(backendurl+'/student/markAttendance', {
             method: 'POST',
             headers: {
+                'Content-Type': 'application/json',
                 'authtoken': localStorage.getItem("authtoken")
             },
-            body: formData
+            body: JSON.stringify({
+                subject_id: subject_id,
+                image: image
+            })
         }).then((response) => response.json())
             .then((data) => {
                 console.log(data)
@@ -35,9 +35,7 @@ const MarkAttendance = ({subject_id}) => {
 
     const capture = () => {
         const imgBuffer = webcamRef.current.getScreenshot();
-        const img = new Blob([imgBuffer], { type: 'image/jpeg' });
-        console.log(img)
-        setImage(img)
+        setImage(imgBuffer)
     };
 
     return (

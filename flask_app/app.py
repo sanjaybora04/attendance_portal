@@ -9,6 +9,7 @@ app = Flask(__name__)
 @app.route('/comparefaces',methods=['POST'])
 def comparefaces():
     img1 = flask.request.files.get('img1')
+    img1.save('image.png')
     img2 = flask.request.files.get('img2')
     m = match(img1,img2)
     return(jsonify({'match':m}))

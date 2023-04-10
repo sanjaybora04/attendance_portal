@@ -7,25 +7,35 @@ const UpdateProfile = () => {
     const [image, setImage] = useState(null);
     const handleSubmit = (e) => {
         e.preventDefault();
+        // TODO: Verify that entered file is an image or not
 
-        const formData = new FormData();
-        console.log(image)
-        formData.append('image', image);
-        formData.append('class', Class);
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = function (event) {
+            const imgBuffer = event.target.result
+            fetch(backendurl + '/student/updateProfile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authtoken': localStorage.getItem("authtoken")
+                },
+                body: JSON.stringify({
+                    class: Class,
+                    image: imgBuffer
+                })
+            }).then((response) => response.json())
+                .then((data) => {
+                    alert(data.msg)
+                })
+                .catch((err) => {
+                    console.log(err.message);
+                });
 
-        fetch(backendurl+'/student/updateProfile', {
-            method: 'POST',
-            headers: {
-                'authtoken': localStorage.getItem("authtoken")
-            },
-            body: formData
-        }).then((response) => response.json())
-            .then((data) => {
-                alert(data.msg)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            });
+        };
+        reader.onerror = function (error) {
+            alert('Error with image file');
+        };
+
 
     };
     return (
@@ -68,7 +78,7 @@ const UpdateProfile = () => {
                             {/* Form content goes here */}
                             <form>
                                 <div className="form-group">
-                                    <label htmlFor="inputClass">Class</label>
+                                    <label htmlFor="inputClass">Semester</label>
                                     <input
                                         type="text"
                                         className="form-control"

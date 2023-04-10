@@ -22,7 +22,11 @@ router.post('/signup',(req,res)=>{
             res.status(401).json({error:err})
           }
           else{
-            const authtoken = jwt.sign(teacher.toJSON(), JWT_SECRET);
+            teacher = {
+              _id: teacher._id,
+              usertype: 'teacher'
+            }
+            const authtoken = jwt.sign(teacher, JWT_SECRET);
             res.json({authtoken})
           }
         });
@@ -33,7 +37,11 @@ router.post('/signup',(req,res)=>{
 router.post('/login',(req,res)=>{
   Teacher.findOne({email:req.body.username,password:req.body.password},function(err,teacher){
     if(teacher){
-      const authtoken = jwt.sign(teacher.toJSON(), JWT_SECRET);
+      teacher = {
+        _id: teacher._id,
+        usertype:'teacher'
+      }
+      const authtoken = jwt.sign(teacher, JWT_SECRET);
       res.json({authtoken})
     }
     else{

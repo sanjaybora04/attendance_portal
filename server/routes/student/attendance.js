@@ -1,19 +1,6 @@
 const router = require("express").Router();
 const fetchuser = require("../../middleware/fetchuser")
-const fs = require('fs')
-const { Blob } = require('buffer');
-
-const path = require('path')
-const multer = require('multer')
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, '/home/anonymous/Desktop/Attendance-system/server/uploads/') // remove hard coded string
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
-    }
-})
-var upload = multer({ storage: storage });
+const {Blob} = require('buffer')
 
 const Subject = require('../../db/models/subjectmodel')
 const Attendance = require("../../db/models/attendancemodel")
@@ -39,7 +26,7 @@ router.post('/getLiveClasses', fetchuser, (req, res) => {
     })
 })
 
-router.post("/markAttendance", fetchuser, upload.single('image'), (req, res) => {
+router.post("/markAttendance", fetchuser, (req, res) => {
     // Check if attendance session is live
     Attendance.findOne({ subject: req.body.subject_id, expiresAt: { $ne: null }}, function (err, attendance) {
         if (attendance) {
@@ -49,23 +36,17 @@ router.post("/markAttendance", fetchuser, upload.single('image'), (req, res) => 
                     res.json({msg:"Your attendance is already marked"})
                 }
                 else{
+                    // TODO: Instead of sending blob send image buffer directly
                     //converting image from buffer to blob because flask doesnt read formdata if its buffer
-                    const img1=null
-                    const img2=null
-                    try{
-                        const img1_buffer = fs.readFileSync(req.user.image.path);
-                        img1 = new Blob([img1_buffer], { type: req.user.image.mimetype });
-                    }catch{
-                        fs.unlinkSync(req.file.path)
-                        return res.json({msg:"Please Set your profile image"})
+                    
+                    if(!req.user.image){
+                        return res.json({msg:"Please set your profile image first"})
                     }
-                    try{
-                        const img2_buffer = fs.readFileSync(req.file.path);
-                        img2 = new Blob([img2_buffer], { type: req.user.image.mimetype });
-                        fs.unlinkSync(req.file.path)
-                    }catch{
-                        return res.json({msg:"Cannot retrieve image"})
-                    }
+
+                    let img1 = req.user.image 
+                    img1 = new Blob([img1]);
+                    let img2 = req.body.image 
+                    img2 = new Blob([img2])
                 
                     
                     const formData = new FormData()
