@@ -11,7 +11,7 @@ module.exports = {
         secret:"mybeGgEstCieKraat"
     },
     mail:{
-        email:"sanjaybora380@outlook.com",
-        password:"Sanju@7895"
+        email:"",
+        password:""
     }
 }
