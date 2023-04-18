@@ -3,11 +3,15 @@ const Schema = mongoose.Schema;
 
 const subjectSchema = new Schema({
     name: String,
-    class: String,
+    course: {
+        name:String,
+        semester:String
+    },
     teacher:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'teacher'
     },
+    teacher_name: String,
     students:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'student'

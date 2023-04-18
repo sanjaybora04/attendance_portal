@@ -1,51 +1,94 @@
 const router = require("express").Router();
 const keys = require('../../config/keys')
-var jwt = require('jsonwebtoken');
+const { body, validationResult } = require('express-validator');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = keys.JWT.secret
 const Teacher = require('../../db/models/teachermodel');
+const OTP = require('../../db/models/otpmodel')
 
-router.post('/signup',(req,res)=>{
-    Teacher.findOne({ email: req.body.email },function(err,docs){
-      if (docs) {
-        return res.json({ msg: "A user with this email already exists" })
-      }
-      else{
-        // Create a new teacher
-        Teacher.create({
-          email: req.body.username,
-          password: req.body.password,
-          subjects: []
-        },function(err,teacher){
-          if(err){
-            console.log(err)
-            res.status(401).json({error:err})
-          }
-          else{
-            teacher = {
-              _id: teacher._id,
-              usertype: 'teacher'
+router.post('/signup', [
+  body('name', 'Name should be more then 3 characters').isLength({ min: 3 }),
+  body('email', 'Enter a valid email').isEmail(),
+  body('password', 'Password must be atleast 5 characters').isLength({ min: 5 }),
+], (req, res) => {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.json({ alerts: errors.array() });
+  }
+
+  OTP.findOne({email:req.body.email},(err,doc)=>{
+    if(req.body.otp == doc.otp){
+      Teacher.findOne({ email: req.body.email }, async(err, docs)=>{
+        if (docs) {
+          return res.json({ alert: "A user with this email already exists" })
+        }
+        else {
+          // Encrypt password
+          const salt = await bcrypt.genSalt(10);
+          const secPass = await bcrypt.hash(req.body.password, salt);
+          // Create a new teacher
+          Teacher.create({
+            name: req.body.name,
+            email: req.body.email,
+            password: secPass,
+            subjects: []
+          },(err, teacher)=>{
+            if (err) {
+              console.log(err)
+              res.status(401).json({ error: err })
             }
-            const authtoken = jwt.sign(teacher, JWT_SECRET);
-            res.json({authtoken})
-          }
-        });
-      }
-    });          
-})
-
-router.post('/login',(req,res)=>{
-  Teacher.findOne({email:req.body.username,password:req.body.password},function(err,teacher){
-    if(teacher){
-      teacher = {
-        _id: teacher._id,
-        usertype:'teacher'
-      }
-      const authtoken = jwt.sign(teacher, JWT_SECRET);
-      res.json({authtoken})
+            else {
+              teacher = {
+                _id: teacher._id,
+                usertype: 'teacher'
+              }
+              const authtoken = jwt.sign(teacher, JWT_SECRET);
+              res.json({ authtoken })
+            }
+          });
+        }
+      });
     }
     else{
-      res.json({msg:"Incorrect Credentials!"})
+      console.log(req.body.otp)
+      console.log(req.body.email)
+      res.json({alert:"Incorrect Otp!"})
+    }
+  })
+
+})
+
+router.post('/login', [
+  body('email', 'Enter a valid email').isEmail(),
+  body('password', 'Password must be atleast 5 characters').isLength({ min: 5 }),
+], (req, res) => {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.json({ alerts: errors.array() });
+  }
+
+  Teacher.findOne({ email: req.body.email }, (err, teacher) => {
+    if (teacher) {
+      bcrypt.compare(req.body.password,teacher.password,(err,match)=>{
+        if(match){
+          teacher = {
+            _id: teacher._id,
+            usertype: 'teacher'
+          }
+          const authtoken = jwt.sign(teacher, JWT_SECRET);
+          res.json({ authtoken })
+        }
+        else{
+          res.json({alert:"Incorrect Password"})
+        }
+      })
+    }
+    else {
+      res.json({ alert: "Email not found!!!" })
     }
   })
 })

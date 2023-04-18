@@ -3,38 +3,34 @@ const Subject = require('../../db/models/subjectmodel');
 const Student = require('../../db/models/studentmodel')
 const fetchuser = require('../../middleware/fetchuser')
 
-// Get Students studying that subject
-router.post('/getAddedStudents', fetchuser, async (req, res) => {
-  Subject.findById(req.body.subject_id, function (err, data) {
+router.post('/getStudents', fetchuser, async (req, res) => {
+  Subject.findById(req.body.subject_id, function (err, subject) {
     if (err) {
       console.log(err)
       res.status(401).json({ error: err })
     }
     else {
-      Student.find({ _id: { $in: data.students } }, function (err, data) {
+      // get added students
+      Student.find({ _id: { $in: subject.students } }, function (err, addedStudents) {
         if (err) {
           console.log(err)
           res.status(401).json({ error: err })
         }
         else {
-          res.json(data)
+          // get all students in course
+          Student.find({ course: subject.course }, function (err, allStudents) {
+            if (err) {
+              console.log(err)
+              res.status(401).json({ error: err })
+            }
+            else {
+              res.json({subject,addedStudents,allStudents})
+            }
+          })
         }
       })
     }
   });
-})
-
-// Get All the students in the class
-router.post('/getClassStudents', fetchuser, async (req, res) => {
-  Student.find({ class: req.body.class }, function (err, data) {
-    if (err) {
-      console.log(err)
-      res.status(401).json({ error: err })
-    }
-    else {
-      res.json(data)
-    }
-  })
 })
 
 // Add Students to a subject

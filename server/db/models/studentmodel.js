@@ -4,8 +4,16 @@ const Schema = mongoose.Schema;
 const studentSchema = new Schema({
     name: String,
     email: String,
-    class: String,
-    image: String,
+    enrollment_number: String,
+    image: {
+        type: String,
+        default: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+    },
+    course: {
+        name: String,
+        semester: String,
+        section: String
+    },
     subjects: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'subject'

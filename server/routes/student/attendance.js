@@ -33,16 +33,9 @@ router.post("/markAttendance", fetchuser, (req, res) => {
             //Check if student has already marked attendance
             Attendance.findOne({createdAt:attendance.createdAt,student:req.user._id},(err,data)=>{
                 if(data){
-                    res.json({msg:"Your attendance is already marked"})
+                    res.json({alert:"Your attendance is already marked"})
                 }
-                else{
-                    // TODO: Instead of sending blob send image buffer directly
-                    //converting image from buffer to blob because flask doesnt read formdata if its buffer
-                    
-                    if(!req.user.image){
-                        return res.json({msg:"Please set your profile image first"})
-                    }
-                    
+                else{                    
                     fetch('http://localhost:7000/comparefaces', {
                         method: 'POST',
                         headers: {
@@ -60,26 +53,29 @@ router.post("/markAttendance", fetchuser, (req, res) => {
                                 teacher: attendance.teacher,
                                 createdAt: attendance.createdAt,
                                 student: req.user._id
-                            }, function (err, data) {
+                            },(err, data)=>{
                                 if (err) {
                                     console.log(err)
                                     res.status(401).json({ error: err })
                                 }
                                 else {
-                                    res.json({ msg: "Attendance marked" })
+                                    res.json({ alert: "Attendance marked" })
                                 }
                             })
                         }
+                        else{
+                            res.json({alert:"Couldn't Match face!\nPlease update your profile image or try again"})
+                        }
                     })
                     .catch((err) => {
-                        res.json({msg:"Face doesn't match"})
-                        console.log(err.message);
+                        console.log("Error fetching from flask app")
+                        res.json({alert:"Internal Server Error!!!"})
                     });
                 }
             })
         }
         else {
-            res.json({ msg: 'Attendance Session is over' })
+            res.json({ alert: 'Attendance Session is not live!!!' })
         }
     })
 })
