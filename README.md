@@ -18,6 +18,14 @@ npm i
 pip install -r 'requirements.txt'
 ```
 
+* ### Configuration :-
+
+* Set your email and password to send otps
+  * Go to `server/config/keys` and set your outlook mail id and password.
+  > If you want to email service other than outlook then configure transporter in `server/routes/root/routes`  
+
+* Set your server baseurl in `client/src/api`
+
 ## How to use :-
 
 * Run this command inside client folder to start the react app
