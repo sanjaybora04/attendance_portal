@@ -34,7 +34,7 @@
   ```
 * Run this command inside server folder to start the node server
   ```
-  npm index.js
+  node index.js
   ```
 * Run this command inside flask_app to start the flask app
   ```
