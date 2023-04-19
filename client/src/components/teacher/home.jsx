@@ -55,7 +55,7 @@ const Home = () => {
                     Add New Subject
                 </button>
                 {addSubject &&
-                    <div className='p-3 md:ml-44 left-[calc(50%-128px)] rounded-lg shadow-lg absolute grid grid-cols-2 bg-white'>
+                    <div className='p-3 md:ml-44 left-[calc(50%-128px)] rounded-lg shadow-lg absolute w-64 grid grid-cols-2 bg-white'>
                         <div className='col-span-2'>
                             <label
                                 htmlFor="email"
@@ -65,7 +65,7 @@ const Home = () => {
                             </label>
                             <input
                                 type="text"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
                                 placeholder="Enter subject name"
                                 required=""
                                 value={subjectName}
