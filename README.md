@@ -22,7 +22,9 @@
 
 * Set your email and password to send otps
   * Go to `server/config/keys` and set your outlook mail id and password.
-  > If you want to use email service other than outlook then configure transporter in `server/routes/root/routes`  
+  > If you want to use email service other than outlook then configure transporter in `server/routes/root/routes` 
+
+* Set your location(latitude and longitude) in `server/config/keys` 
 
 * Set your server baseurl in `client/src/api`
 
