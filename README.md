@@ -30,7 +30,7 @@
 
 * Run this command inside client folder to start the react app
   ```
-  npm start
+  npm run dev -- --host
   ```
 * Run this command inside server folder to start the node server
   ```
