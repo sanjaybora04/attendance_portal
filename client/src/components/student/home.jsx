@@ -13,8 +13,21 @@ const MarkAttendance = ({ subject,live }) => {
         
         // Take picture
         capture()
-        api.post('/student/markAttendance', { subject_id:subject._id, image })
-        .then(()=>setCam(false))
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                api.post('/student/markAttendance', { 
+                    subject_id:subject._id, 
+                    image,
+                    location:{
+                        latitude:position.coords.latitude,
+                        longitude:position.coords.longitude,
+                        accuracy:position.coords.accuracy
+                    }
+                })
+                .then(()=>setCam(false))
+            },
+            error => console.error(error)
+          );
     };
 
     const capture = () => {

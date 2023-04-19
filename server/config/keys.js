@@ -13,5 +13,9 @@ module.exports = {
     mail:{
         email:"",
         password:""
+    },
+    location:{
+        latitude:28.628039,
+        longitude:77.094421
     }
 }

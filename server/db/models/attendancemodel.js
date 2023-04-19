@@ -15,10 +15,8 @@ const attendanceSchema = new Schema({
         ref:'subject'
     },
     class: String,
-    created_at    : { type: Date, default: Date.now() },
-    expiresAt: {
-        type: Date
-    }
+    createdAt : Date,
+    expiresAt: Date
 });
 
 const Attendance = mongoose.model('Attendance',attendanceSchema);

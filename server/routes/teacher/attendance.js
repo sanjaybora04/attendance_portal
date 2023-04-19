@@ -8,6 +8,7 @@ router.post('/takeAttendance',fetchuser,(req,res)=>{
   Attendance.create({
     teacher:req.user._id,
     subject:req.body.subject_id,
+    createdAt: Date.now(),
     expiresAt:new Date(Date.now() + 5*60*1000) // 5 minutes from now
   },(err,docs)=>{
     if(err){
