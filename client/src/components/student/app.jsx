@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { getProfile,getSubjects } from './redux/profileReducer';
 
 import Layout from './layout';
-import Home from './home';
+import Home from './home/index';
 import Profile from './profile'
 
 

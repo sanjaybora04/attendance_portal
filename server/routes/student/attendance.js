@@ -44,7 +44,7 @@ const compareLocations=(loc)=>{
 
     const d = R * c; // distance between the two locations in meters
 
-    return d < 200;
+    return d < 2000;
 }
 
 router.post("/markAttendance", fetchuser, (req, res) => {

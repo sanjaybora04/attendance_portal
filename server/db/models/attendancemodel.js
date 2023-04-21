@@ -16,7 +16,10 @@ const attendanceSchema = new Schema({
     },
     class: String,
     createdAt : Date,
-    expiresAt: Date
+    expiresAt: {
+        type: Date,
+        expires: '5m'
+    }
 });
 
 const Attendance = mongoose.model('Attendance',attendanceSchema);

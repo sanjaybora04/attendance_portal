@@ -5,8 +5,9 @@ const otpSchema = new Schema({
     otp: String,
     email: String,
     expiresAt: {
-        type: Date,
-        default: new Date(Date.now() + 5*60*1000) //after 5 minutes
+        type: Boolean,
+        default: new Date(Date.now() + 5*60*1000), //after 5 minutes
+        expires: '5m'
     }
 });
 

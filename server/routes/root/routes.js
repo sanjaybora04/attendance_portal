@@ -16,22 +16,22 @@ var transporter = nodemailer.createTransport({
   }
 });
 
-router.post('/getotp',[
-  body('email',"Enter a valid email").isEmail()
-],(req,res)=>{
+router.post('/getotp', [
+  body('email', "Enter a valid email").isEmail()
+], (req, res) => {
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.json({ alerts: errors.array() });
   }
 
-  OTP.findOne({email:req.body.email},(err,doc)=>{
-    if(doc){
-      res.json({alert:'Wait till previous otp expires(5 minutes)'})
+  OTP.findOne({ email: req.body.email }, (err, doc) => {
+    if (doc) {
+      res.json({ alert: 'Wait till previous otp expires(5 minutes)' })
     }
-    else{
+    else {
       const otp = otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
-      
+
       transporter.sendMail({
         from: keys.mail.email, // sender email address
         to: req.body.email, // receiver email address
@@ -42,14 +42,14 @@ router.post('/getotp',[
           console.error('Error sending OTP via email:', err);
         } else {
           OTP.create({
-            email:req.body.email,
-            otp: otp,
-          },(err,data)=>{
-            if(err){
+            email: req.body.email,
+            otp: otp
+          }, (err, data) => {
+            if (err) {
               console.log(err)
             }
-            else{
-              res.json({alert:"Otp Sent!"})
+            else {
+              res.json({ alert: "Otp Sent to "+req.body.email })
             }
           })
         }
@@ -60,13 +60,13 @@ router.post('/getotp',[
 })
 
 
-router.get('/',(req, res) => {
+router.get('/', (req, res) => {
   res.send('hello')
 })
 
 
-router.post('/getuser',fetchuser,(req, res) => {
-  res.json({usertype:req.user.usertype})
+router.post('/getuser', fetchuser, (req, res) => {
+  res.json({ usertype: req.user.usertype })
 })
 
 module.exports = router;

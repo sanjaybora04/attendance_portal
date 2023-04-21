@@ -7,6 +7,7 @@ const root = require('./routes/root/routes')
 const studentAuth = require('./routes/student/auth')
 const studentProfile = require('./routes/student/profile')
 const attendance = require('./routes/student/attendance')
+const studentStats = require('./routes/student/stats')
 //Teacher routes
 const teacherAuth = require('./routes/teacher/auth');
 const teacherProfile = require('./routes/teacher/profile')
@@ -32,6 +33,7 @@ app.use('/', root)
 app.use('/student', studentAuth)
 app.use('/student', studentProfile)
 app.use('/student', attendance)
+app.use('/student', studentStats)
 
 app.use('/teacher', teacherAuth)
 app.use('/teacher', teacherProfile)
