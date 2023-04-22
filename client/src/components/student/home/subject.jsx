@@ -11,7 +11,7 @@ const MarkAttendance = ({ subject, live }) => {
 
         // Take picture
         const image = await webcamRef.current.getScreenshot()
-        
+
         navigator.geolocation.getCurrentPosition(
             position => {
                 api.post('/student/markAttendance', {
