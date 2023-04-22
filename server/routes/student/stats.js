@@ -9,7 +9,6 @@ router.post('/stats', fetchuser, (req, res) => {
             Attendance.find({ subject: { $in: req.user.subjects }, student: req.user._id }).find(req.body).distinct('createdAt', (err, attended) => {
                 if (attended) {
                     const attendance = ((attended.length/all.length)*100).toFixed(0)
-                    console.log(attendance)
                     res.json({attendance})
                 }
                 else {

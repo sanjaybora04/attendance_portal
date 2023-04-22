@@ -4,14 +4,14 @@ import Webcam from 'react-webcam'
 
 const MarkAttendance = ({ subject, live }) => {
     const webcamRef = useRef(null);
-    const [image, setImage] = useState(null);
     const [cam, setCam] = useState(false)
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
 
         // Take picture
-        capture()
+        const image = await webcamRef.current.getScreenshot()
+        
         navigator.geolocation.getCurrentPosition(
             position => {
                 api.post('/student/markAttendance', {
@@ -30,11 +30,6 @@ const MarkAttendance = ({ subject, live }) => {
                 alert("Please grant location access")
             }
         );
-    };
-
-    const capture = () => {
-        const imgBuffer = webcamRef.current.getScreenshot();
-        setImage(imgBuffer)
     };
     
     return (

@@ -52,9 +52,7 @@ router.post("/markAttendance", fetchuser, (req, res) => {
     Attendance.findOne({ subject: req.body.subject_id, expiresAt: { $ne: null } }, function (err, attendance) {
         if (attendance) {
             //Check if student has already marked attendance
-            console.log(attendance+"\n\n")
             Attendance.findOne({ createdAt: attendance.createdAt, student: req.user._id }, (err, data) => {
-                console.log(data)
                 if (data) {
                     res.json({ alert: "Your attendance is already marked" })
                 }
