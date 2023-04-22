@@ -24,7 +24,7 @@ const Home = () => {
                     Subjects
                 </h6>
             </div>
-            <div className='block p-2 text-center'>
+            <div className={'block m-2 p-2 rounded-lg text-center '+(attendance>=75?"bg-green-200":"bg-red-200")}>
                 OverAll Attendance :- {attendance}%
             </div><hr/>
 
