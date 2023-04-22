@@ -26,4 +26,21 @@ api.interceptors.response.use(
     console.log("error while fetching");
   }
 );
+
+const alert = (alert)=>{
+  const alertDiv = document.createElement('div')
+  alertDiv.classList.add('fixed','text-center','left-1/2','-translate-x-1/2','bottom-0','bg-gray-800','text-white','p-2','mb-5','rounded-md','transition-opacity','duration-500','opacity-100')
+  alertDiv.innerText=alert
+  
+  document.body.appendChild(alertDiv)
+
+  setTimeout(()=>{
+    alertDiv.classList.remove('opacity-100')
+    alertDiv.classList.add('opacity-0')
+    setTimeout(()=>{
+      alertDiv.remove()
+    },500)
+  },3000)
+}
+
 export default api
