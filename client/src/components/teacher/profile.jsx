@@ -20,8 +20,8 @@ const EditImage = ({ image, setImage }) => {
     };
 
     return (
-        <div className="m-3 relative">
-            <button className='relative flex p-2 pr-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700'
+        <div className="m-3">
+            <button className='flex p-2 pr-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700'
                 onClick={() => setCam(!cam)}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-4 w-4 cursor-pointer">
@@ -33,7 +33,7 @@ const EditImage = ({ image, setImage }) => {
                     <AvatarEditorComponent image={image} setImage={setImage} closeEditor={e => setEditor(false)} />
             }
             {cam &&
-                <div className='absolute mt-2 w-80 h-[410px] bg-green-50 -left-28 rounded-lg shadow-md'>
+                <div className='absolute mt-2 w-80 h-[410px] bg-green-50 left-1/2 md:translate-x-8 -translate-x-1/2 rounded-lg shadow-md'>
                     <div className="flex justify-center">
                         <h5 className="pt-2">
                             Update Profile Image
@@ -81,7 +81,7 @@ const AvatarEditorComponent = ({ image, setImage, closeEditor }) => {
     };
 
     return (
-        <div className="-left-28 absolute">
+        <div className="absolute left-1/2 md:translate-x-8 -translate-x-1/2">
             <div className='flex flex-col bg-gray-400 p-2 rounded-lg border'>
                 <AvatarEditor
                     ref={editorRef}
