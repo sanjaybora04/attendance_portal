@@ -60,7 +60,7 @@ router.post("/markAttendance", fetchuser, (req, res) => {
                     //verify location
                     if(compareLocations(req.body.location)){
                         // verify face                    
-                        fetch('http://localhost:7000/comparefaces', {
+                        fetch('http://127.0.0.1:7000/comparefaces', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'

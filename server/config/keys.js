@@ -2,7 +2,7 @@
 
 module.exports = {
     mongodb:{
-        URI: 'mongodb://localhost:27017/attendance_portal'
+        URI: 'mongodb://127.0.0.1:27017/attendance_portal'
     },
     JWT:{
         secret:"mybeGgEstCieKraat"
