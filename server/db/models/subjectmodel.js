@@ -5,7 +5,7 @@ const subjectSchema = new Schema({
     name: String,
     course: {
         name:String,
-        semester:String
+        semester:Number
     },
     teacher:{
         type: mongoose.Schema.Types.ObjectId,

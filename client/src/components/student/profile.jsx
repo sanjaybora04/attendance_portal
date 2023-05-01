@@ -179,30 +179,25 @@ const Profile = () => {
                     <p className='capitalize'>Enrollment Number</p>
                     <input type='text' placeholder='Enter E no.'
                         value={eno}
-                        onChange={event => setEno(event.target.value)}
+                        disabled
+                        // onChange={event => setEno(event.target.value)}
                         className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2' />
                 </div>
                 <div className='col-span-3 w-full'>
                     <p className='capitalize'>Course</p>
-                    <select value={course}
-                        onChange={event => setCourse(event.target.value)}
-                        className='w-full rounded-lg border border-gray-300 bg-gray-300 focus:bg-white p-2'>
-                        <option value="BCA">BCA</option>
-                        <option value="BBA">BBA</option>
-                    </select>
+                    <input type='text' placeholder='Enter Name'
+                        value={course}
+                        disabled
+                        // onChange={event => setCourse(event.target.value)}
+                        className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2' />
                 </div>
                 <div className='col-span-3 w-full'>
                     <p className='capitalize'>Semester</p>
-                    <select value={semester}
-                        onChange={event => setSemester(event.target.value)}
-                        className='w-full rounded-lg border border-gray-300 bg-gray-300 focus:bg-white p-2'>
-                        <option value="I">I</option>
-                        <option value="II">II</option>
-                        <option value="III">III</option>
-                        <option value="IV">IV</option>
-                        <option value="V">V</option>
-                        <option value="VI">VI</option>
-                    </select>
+                    <input type='text' placeholder='Enter Name'
+                        value={semester}
+                        disabled
+                        // onChange={event => setSemester(event.target.value)}
+                        className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2' />
                 </div>
                 <div className='col-span-6 w-full flex justify-center mt-5'>
                     <button className='font-medium rounded-xl text-lg px-4 py-1 text-center text-white bg-green-500 hover:bg-green-600'

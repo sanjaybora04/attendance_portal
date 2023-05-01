@@ -11,8 +11,7 @@ const studentSchema = new Schema({
     },
     course: {
         name: String,
-        semester: String,
-        section: String
+        semester: Number,
     },
     subjects: [{
         type: mongoose.Schema.Types.ObjectId,

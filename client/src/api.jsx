@@ -23,7 +23,7 @@ api.interceptors.response.use(
   },
   error => {
     // Handle error
-    console.log("error while fetching");
+    console.log("Network Error!")
   }
 );
 

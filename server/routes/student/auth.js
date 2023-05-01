@@ -6,16 +6,14 @@ const keys = require('../../config/keys')
 
 const JWT_SECRET = keys.JWT.secret
 const Student = require('../../db/models/studentmodel')
+const studentList = require("../../config/studentlist")
 const OTP = require('../../db/models/otpmodel')
 
 
 // Student Signup
 router.post('/signup', [
-  body('name', 'Name should be more then 3 characters').isLength({ min: 3 }),
   body('email', 'Enter a valid email').isEmail(),
   body('password', 'Password must be atleast 5 characters').isLength({ min: 5 }),
-  body('eno', 'Enrollment Number is required').notEmpty(),
-  body('course.name', 'course is required').notEmpty(),
 ], (req, res) => {
 
   const errors = validationResult(req);
@@ -30,31 +28,35 @@ router.post('/signup', [
           return res.json({ alert: "A user with this email already exists" })
         }
         else {
-          // Encrypt password
-          const salt = await bcrypt.genSalt(10);
-          const secPass = await bcrypt.hash(req.body.password, salt);
-          // Create a new user
-          Student.create({
-            name: req.body.name,
-            email: req.body.email,
-            password: secPass,
-            enrollment_number: req.body.eno,
-            course: req.body.course,
-            subjects: [],
-          }, function (err, student) {
-            if (err) {
-              console.log(err)
-              res.status(401).json({ error: err })
-            }
-            else {
-              student = {
-                _id: student._id,
-                usertype: 'student'
+          // check if student data is present in studentlist
+          if(studentList[req.body.email]){
+            // Encrypt password
+            const salt = await bcrypt.genSalt(10);
+            const secPass = await bcrypt.hash(req.body.password, salt);
+            // Create a new user
+            Student.create({
+              email: req.body.email,
+              password: secPass,
+              subjects: [],
+              ...studentList[req.body.email]
+            }, function (err, student) {
+              if (err) {
+                console.log(err)
+                res.status(401).json({ error: err })
               }
-              const authtoken = jwt.sign(student, JWT_SECRET);
-              res.json({ authtoken })
-            }
-          });
+              else {
+                student = {
+                  _id: student._id,
+                  usertype: 'student'
+                }
+                const authtoken = jwt.sign(student, JWT_SECRET);
+                res.json({ authtoken })
+              }
+            });
+          }
+          else{
+            res.json({alert: req.body.email+" not found in student list"})
+          }
         }
       });
     }

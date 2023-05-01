@@ -5,18 +5,12 @@ import api from '/src/api'
 
 const Signup = () => {
   const [userType, setUserType] = useState('student')
-  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [otp, setOtp] = useState('')
   const [password, setPassword] = useState('')
 
-  const [eno, setEno] = useState('') // Enrollment Number
-  const [course, setCourse] = useState('BCA')
-  const [semester, setSemester] = useState('I')
-
   const getOtp = (e) => {
     e.preventDefault()
-    console.log(email)
     api.post('/getotp', { email })
   }
 
@@ -24,15 +18,9 @@ const Signup = () => {
     e.preventDefault();
 
     api.post('/' + userType + '/signup', {
-      name,
       email,
       otp,
       password,
-      eno,
-      course: {
-        name: course,
-        semester: semester
-      }
     }).then(response => {
       if (response.data.authtoken) {
         localStorage.setItem('authtoken', response.data.authtoken)
@@ -64,22 +52,7 @@ const Signup = () => {
                   <option value="teacher">Teacher</option>
                 </select>
               </div>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-900"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
-                  placeholder="Enter your name"
-                  required
-                  value={name}
-                  onChange={event => setName(event.target.value)}
-                />
-              </div>
+              
               <div>
                 <label
                   htmlFor="email"
@@ -136,51 +109,6 @@ const Signup = () => {
                 />
               </div>
 
-              {/* If usertype is Student */}
-              {userType == "student" ? <div className='grid grid-cols-2'>
-                <div className='col-span-2'>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-900"
-                  >
-                    Enrollment Number
-                  </label>
-                  <input
-                    type="text"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
-                    placeholder="Enter your Enrollment Number"
-                    required
-                    value={eno}
-                    onChange={event => setEno(event.target.value)}
-                  />
-                </div>
-                <div className='m-2'>
-                  <p className='capitalize'>Course</p>
-                  <select value={course}
-                    onChange={event => setCourse(event.target.value)}
-                    className='w-full rounded-lg border border-gray-300 bg-gray-300 focus:bg-white p-2'>
-                    <option value="BCA">BCA</option>
-                    <option value="BBA">BBA</option>
-                  </select>
-                </div>
-                <div className='m-2'>
-                  <p className='capitalize'>Semester</p>
-                  <select value={semester}
-                    onChange={event => setSemester(event.target.value)}
-                    className='w-full rounded-lg border border-gray-300 bg-gray-300 focus:bg-white p-2'>
-                    <option value="I">I</option>
-                    <option value="II">II</option>
-                    <option value="III">III</option>
-                    <option value="IV">IV</option>
-                    <option value="V">V</option>
-                    <option value="VI">VI</option>
-                  </select>
-                </div>
-              </div> :
-                // If usertype is Teacher
-                <div>
-
-                </div>}
               <button
                 type="submit"
                 className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"

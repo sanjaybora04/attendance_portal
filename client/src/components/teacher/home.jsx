@@ -9,8 +9,8 @@ const Home = () => {
     const subjects = useSelector(state => state.profile.subjects)
     const [addSubject, setAddsubject] = useState(false)
     const [subjectName, setSubjectname] = useState('')
-    const [course, setCourse] = useState('BCA')
-    const [semester, setSemester] = useState('I')
+    const [course, setCourse] = useState('')
+    const [semester, setSemester] = useState('')
 
 
     const handleSubmit = () => {
@@ -65,6 +65,7 @@ const Home = () => {
                             </label>
                             <input
                                 type="text"
+                                id="email"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
                                 placeholder="Enter subject name"
                                 required=""
@@ -73,26 +74,38 @@ const Home = () => {
                             />
                         </div>
                         <div className='m-2'>
-                            <p className='capitalize'>Course</p>
-                            <select value={course}
-                                onChange={event => setCourse(event.target.value)}
-                                className='w-full rounded-lg border border-gray-300 bg-gray-300 focus:bg-white p-2'>
-                                <option value="BCA">BCA</option>
-                                <option value="BBA">BBA</option>
-                            </select>
+                            <label
+                                htmlFor="course"
+                                className="block text-sm font-medium text-gray-900"
+                            >
+                                Course
+                            </label>
+                            <input
+                                type="text"
+                                id="course"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+                                placeholder="course"
+                                required=""
+                                value={course}
+                                onChange={event => setCourse(event.target.value.toUpperCase())}
+                            />
                         </div>
                         <div className='m-2'>
-                            <p className='capitalize'>Semester</p>
-                            <select value={semester}
+                            <label
+                                htmlFor="semester"
+                                className="block text-sm font-medium text-gray-900"
+                            >
+                                Semester
+                            </label>
+                            <input
+                                type="number"
+                                id="semester"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+                                placeholder="semester"
+                                required=""
+                                value={semester}
                                 onChange={event => setSemester(event.target.value)}
-                                className='w-full rounded-lg border border-gray-300 bg-gray-300 focus:bg-white p-2'>
-                                <option value="I">I</option>
-                                <option value="II">II</option>
-                                <option value="III">III</option>
-                                <option value="IV">IV</option>
-                                <option value="V">V</option>
-                                <option value="VI">VI</option>
-                            </select>
+                            />
                         </div>
                         <div className='col-span-2 pt-3'>
                             <button className='font-medium rounded-lg text-md px-4 py-1 text-center text-white bg-green-500 hover:bg-green-600'
@@ -127,7 +140,7 @@ const Home = () => {
                     </thead>
                     <tbody>
                         {subjects.map(subject => {
-                            return <Link to={'/subject/'+(subject._id)} key={subject._id} className='w-full'>
+                            return <Link to={'/subject/' + (subject._id)} key={subject._id} className='w-full'>
                                 <tr className='flex justify-between'>
                                     <td className="py-3 px-5 w-1/4 border-b border-blue-gray-50">
                                         <p className="block antialiased font-sans text-sm leading-normal font-semibold">

@@ -7,9 +7,9 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = keys.JWT.secret
 const Teacher = require('../../db/models/teachermodel');
 const OTP = require('../../db/models/otpmodel')
+const teacherList = require('../../config/teacherlist')
 
 router.post('/signup', [
-  body('name', 'Name should be more then 3 characters').isLength({ min: 3 }),
   body('email', 'Enter a valid email').isEmail(),
   body('password', 'Password must be atleast 5 characters').isLength({ min: 5 }),
 ], (req, res) => {
@@ -26,29 +26,35 @@ router.post('/signup', [
           return res.json({ alert: "A user with this email already exists" })
         }
         else {
-          // Encrypt password
-          const salt = await bcrypt.genSalt(10);
-          const secPass = await bcrypt.hash(req.body.password, salt);
-          // Create a new teacher
-          Teacher.create({
-            name: req.body.name,
-            email: req.body.email,
-            password: secPass,
-            subjects: []
-          },(err, teacher)=>{
-            if (err) {
-              console.log(err)
-              res.status(401).json({ error: err })
-            }
-            else {
-              teacher = {
-                _id: teacher._id,
-                usertype: 'teacher'
+          // check teacher's data is present in teacherList
+          if(teacherList[req.body.email]){
+            // Encrypt password
+            const salt = await bcrypt.genSalt(10);
+            const secPass = await bcrypt.hash(req.body.password, salt);
+            // Create a new teacher
+            Teacher.create({
+              email: req.body.email,
+              password: secPass,
+              subjects: [],
+              ...teacherList[req.body.email]
+            },(err, teacher)=>{
+              if (err) {
+                console.log(err)
+                res.status(401).json({ error: err })
               }
-              const authtoken = jwt.sign(teacher, JWT_SECRET);
-              res.json({ authtoken })
-            }
-          });
+              else {
+                teacher = {
+                  _id: teacher._id,
+                  usertype: 'teacher'
+                }
+                const authtoken = jwt.sign(teacher, JWT_SECRET);
+                res.json({ authtoken })
+              }
+            });
+          }
+          else{
+            res.json({alert: req.body.email+" not found in teacher list"})
+          }
         }
       });
     }
