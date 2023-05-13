@@ -27,7 +27,6 @@ const Subject = () => {
 
     const handleCheckboxClick = (event) => {
         const { value, checked } = event.target;
-        console.log(checked)
         if (checked) {
             setAddedStudents([...addedStudents, value]);
         } else {
