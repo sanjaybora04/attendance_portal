@@ -18,45 +18,40 @@ var transporter = nodemailer.createTransport({
 
 router.post('/getotp', [
   body('email', "Enter a valid email").isEmail()
-], (req, res) => {
+], async (req, res) => {
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.json({ alerts: errors.array() });
   }
 
-  OTP.findOne({ email: req.body.email }, (err, doc) => {
-    if (doc) {
-      res.json({ alert: 'Wait till previous otp expires(5 minutes)' })
-    }
-    else {
-      const otp = otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
+  try{
 
-      transporter.sendMail({
-        from: keys.mail.email, // sender email address
-        to: req.body.email, // receiver email address
-        subject: 'OTP Verification', // email subject
-        text: `Your OTP is: ${otp}` // email body with the generated OTP
-      }, (err, info) => {
-        if (err) {
-          console.error('Error sending OTP via email:', err);
-        } else {
-          OTP.create({
-            email: req.body.email,
-            otp: otp
-          }, (err, data) => {
-            if (err) {
-              console.log(err)
-            }
-            else {
-              res.json({ alert: "Otp Sent to "+req.body.email })
-            }
-          })
-        }
-      })
+  const doc = await OTP.findOne({ email: req.body.email })
+  if (doc) {
+    res.json({ alert: 'Wait till previous otp expires(5 minutes)' })
+  }
+  else {
+    const otp = otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
 
-    }
-  })
+    await transporter.sendMail({
+      from: keys.mail.email, // sender email address
+      to: req.body.email, // receiver email address
+      subject: 'OTP Verification', // email subject
+      text: `Your OTP is: ${otp}` // email body with the generated OTP
+    })
+
+    await OTP.create({
+      email: req.body.email,
+      otp: otp
+    })
+    res.json({ alert: "Otp Sent to " + req.body.email })
+  }
+
+}catch(err){
+  console.log(err)
+  res.json({error:"Internal Server Error"})
+}
 })
 
 

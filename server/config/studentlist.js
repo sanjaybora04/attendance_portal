@@ -13,7 +13,7 @@ module.exports={
         enrollment_number: "1235",
         course:{
             name:"BTECH",
-            semester: 2
+            semester: 1
         }
     }
 }
