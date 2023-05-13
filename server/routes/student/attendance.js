@@ -54,7 +54,7 @@ router.post("/markAttendance", fetchuser, async (req, res) => {
                 //verify location
                 if (compareLocations(req.body.location)) {
                     // verify face                    
-                    fetch('http://127.0.0.1:7000/comparefaces', {
+                    let response = await fetch('http://127.0.0.1:7000/comparefaces', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -63,26 +63,23 @@ router.post("/markAttendance", fetchuser, async (req, res) => {
                             img1: req.user.image,
                             img2: req.body.image
                         })
-                    }).then((response) => response.json())
-                        .then(async(data) => {
-                            if (data.match == true) {
-                                // Mark Attendance
-                                data = await Attendance.create({
-                                    subject: attendance.subject,
-                                    teacher: attendance.teacher,
-                                    createdAt: attendance.createdAt,
-                                    student: req.user._id
-                                })
-                                res.json({ alert: "Attendance marked" })
-                            }
-                            else {
-                                res.json({ alert: "Couldn't Match face!\nPlease update your profile image or try again" })
-                            }
+                    })
+
+                    response = await response.json()
+
+                    if (response.match == true) {
+                        // Mark Attendance
+                        await Attendance.create({
+                            subject: attendance.subject,
+                            teacher: attendance.teacher,
+                            createdAt: attendance.createdAt,
+                            student: req.user._id
                         })
-                        .catch((err) => {
-                            console.log("Error fetching from flask app")
-                            res.json({ alert: "Internal Server Error!!!" })
-                        });
+                        res.json({ alert: "Attendance marked" })
+                    }
+                    else {
+                        res.json({ alert: "Couldn't Match face!\nPlease update your profile image or try again" })
+                    }
                 }
                 else {
                     res.json({ alert: "You can only mark your attendance, if you are inside college campus" })
