@@ -53,8 +53,6 @@ router.post('/signup', [
       }
     }
     else {
-      console.log(req.body.otp)
-      console.log(req.body.email)
       res.json({ alert: "Incorrect Otp!" })
     }
 
@@ -75,29 +73,38 @@ router.post('/login', [
   }
 
   try {
-
-    let teacher = await Teacher.findOne({ email: req.body.email })
-    if (teacher) {
-      const match = await bcrypt.compare(req.body.password, teacher.password)
-      if (match) {
-        teacher = {
-          _id: teacher._id,
-          usertype: 'teacher'
+    // section : uncomment this section to disable otp verification
+    const doc = await OTP.findOne({ email: req.body.email })
+    if (req.body.otp == doc.otp) {
+    // section
+      let teacher = await Teacher.findOne({ email: req.body.email })
+      if (teacher) {
+        const match = await bcrypt.compare(req.body.password, teacher.password)
+        if (match) {
+          teacher = {
+            _id: teacher._id,
+            usertype: 'teacher'
+          }
+          const authtoken = jwt.sign(teacher, JWT_SECRET);
+          res.json({ authtoken })
         }
-        const authtoken = jwt.sign(teacher, JWT_SECRET);
-        res.json({ authtoken })
+        else {
+          res.json({ alert: "Incorrect Password" })
+        }
       }
       else {
-        res.json({ alert: "Incorrect Password" })
+        res.json({ alert: "Email not found!!!" })
       }
-    }
+    
+    // section :  uncomment this section to disable otp verification
+    } 
     else {
-      res.json({ alert: "Email not found!!!" })
+      res.json({ alert: "Incorrect Otp!" })
     }
-
-  }catch(err){
+    // section
+  } catch (err) {
     console.log(err)
-    res.json({error:"Internal Server Error"})
+    res.json({ error: "Internal Server Error" })
   }
 })
 
