@@ -18,9 +18,26 @@ const EditImage = ({ image, setImage }) => {
         setEditor(true)
     };
 
+    //close camera or editor if user clicks outside the window
+    useEffect(() => {
+        const hide = (e) => {
+            if (!e.target.closest('#camera, #editor, #editbutton')) {
+                setCam(false)
+                setEditor(false)
+            }
+        };
+
+        document.addEventListener('click', hide);
+
+        return () => {
+            document.removeEventListener('click', hide);
+        };
+    }, []);
+
     return (
         <div className="m-3">
             <button className='flex p-2 pr-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700'
+                id='editbutton'
                 onClick={() => setCam(!cam)}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-4 w-4 cursor-pointer">
@@ -32,7 +49,7 @@ const EditImage = ({ image, setImage }) => {
                     <AvatarEditorComponent image={image} setImage={setImage} closeEditor={e => setEditor(false)} />
             }
             {cam &&
-                <div className='absolute mt-2 w-80 h-[410px] bg-green-50 left-1/2 md:translate-x-8 -translate-x-1/2 rounded-lg shadow-md'>
+                <div id='camera' className='absolute mt-2 w-80 h-[410px] bg-green-50 left-1/2 md:translate-x-8 -translate-x-1/2 rounded-lg shadow-md'>
                     <div className="flex justify-center">
                         <h5 className="pt-2">
                             Update Profile Image
@@ -80,7 +97,7 @@ const AvatarEditorComponent = ({ image, setImage, closeEditor }) => {
     };
 
     return (
-        <div className="absolute left-1/2 md:translate-x-8 -translate-x-1/2">
+        <div id='editor' className="absolute left-1/2 md:translate-x-8 -translate-x-1/2">
             <div className='flex flex-col bg-gray-400 p-2 rounded-lg border'>
                 <AvatarEditor
                     ref={editorRef}
@@ -124,7 +141,6 @@ const AvatarEditorComponent = ({ image, setImage, closeEditor }) => {
         </div>
     );
 };
-
 
 const Profile = () => {
     const dispatch = useDispatch()
