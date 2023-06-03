@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -8,18 +8,57 @@ const Layout = () => {
     const profile = useSelector(state => state.profile)
     const location = useLocation()
 
-    const [sidenav, setSidenav] = useState(false)
-    const [dropdownUser, setDropdownUser] = useState(false)
+    //toggle user menu
+    useEffect(() => {
+        const usermenubutton = document.getElementById('usermenubutton');
+        const usermenu = document.getElementById('usermenu');
 
-    // Toogle sidenav
-    const toggleSideNav = () => {
-        setSidenav(!sidenav)
-    }
+        const hide = (e) => {
+            if (!e.target.closest('#usermenu, #usermenubutton')) {
+                usermenu.classList.add('hidden');
+            }
+        };
 
-    // Toogle dropdown user
-    const toggleDropdownuser = () => {
-        setDropdownUser(!dropdownUser)
-    }
+        const toggleMenu = (e) => {
+            usermenu.classList.toggle('hidden');
+        };
+
+        usermenubutton.addEventListener('click', toggleMenu);
+        document.addEventListener('click', hide);
+
+        return () => {
+            usermenubutton.removeEventListener('click', toggleMenu);
+            document.removeEventListener('click', hide);
+        };
+    }, []);
+
+    // toggle sidebar
+    useEffect(() => {
+        const sidebarbutton = document.getElementById('sidebarbutton');
+        const sidebarbutton1 = document.getElementById('sidebarbutton1');
+        const sidebar = document.getElementById('sidebar');
+
+        const hide = (e) => {
+            if (!e.target.closest('#sidebar, #sidebarbutton, #sidebarbutton1')) {
+                sidebar.classList.remove('translate-x-0');
+            }
+        };
+
+        const toggleSidebar = (e) => {
+            sidebar.classList.toggle('translate-x-0');
+        };
+
+        sidebarbutton.addEventListener('click', toggleSidebar);
+        sidebarbutton1.addEventListener('click', toggleSidebar);
+        document.addEventListener('click', hide);
+
+        return () => {
+            sidebarbutton.removeEventListener('click', toggleSidebar);
+            sidebarbutton1.removeEventListener('click', toggleSidebar);
+            document.removeEventListener('click', hide);
+        };
+    }, []);
+
 
     return (
         <>
@@ -27,10 +66,11 @@ const Layout = () => {
                 <div className="px-3 py-3 lg:px-5 lg:pl-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center justify-start md:ml-80">
+
                             <button
                                 type="button"
                                 className="inline-flex items-center p-2 text-sm md:hidden text-gray-500 rounded-lg hover:bg-gray-100"
-                                onClick={toggleSideNav}
+                                id='sidebarbutton'
                             >
                                 <span className="sr-only">Open sidenav</span>
                                 <svg
@@ -47,6 +87,7 @@ const Layout = () => {
                                     />
                                 </svg>
                             </button>
+
                             <div className="flex ml-2 md:mr-24">
                                 <img
                                     src="https://flowbite.com/docs/images/logo.svg"
@@ -64,7 +105,7 @@ const Layout = () => {
                                     type="button"
                                     className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300"
                                     aria-expanded="false"
-                                    onClick={toggleDropdownuser}
+                                    id="usermenubutton"
                                 >
                                     <span className="sr-only">Open user menu</span>
                                     <img
@@ -73,66 +114,67 @@ const Layout = () => {
                                         alt=""
                                     />
                                 </button>
+                                {/* User Menu */}
+                                <div
+                                    className="hidden w-[180px] h-48 z-40 right-2 top-10 mt-4 fixed text-base list-none bg-white divide-y divide-gray-100 rounded shadow "
+                                    id="usermenu"
+                                >
+                                    <div className="px-4 py-3" role="none">
+                                        <p
+                                            className="text-sm text-gray-90"
+                                            role="none"
+                                        >
+                                            {profile.name}
+                                        </p>
+                                        <p
+                                            className="text-sm font-medium text-gray-900 truncate"
+                                            role="none"
+                                        >
+                                            {profile.email}
+                                        </p>
+                                    </div>
+                                    <ul className="py-1" role="none">
+                                        <li>
+                                            <Link
+                                                to="/"
+                                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                role="menuitem"
+                                            >
+                                                Home
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                to="/profile"
+                                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                role="menuitem"
+                                            >
+                                                Profile
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <button
+                                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                role="menuitem"
+                                                onClick={() => { localStorage.setItem('authtoken', null); window.location.href = '/' }}
+                                            >
+                                                Sign out
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </nav>
 
-            {/* User Dropdown */}
-            {dropdownUser && <div
-                className="w-[180px] h-48 z-40 right-2 top-10 mt-4 fixed text-base list-none bg-white divide-y divide-gray-100 rounded shadow "
-                id="dropdown-user"
-            >
-                <div className="px-4 py-3" role="none">
-                    <p
-                        className="text-sm text-gray-90"
-                        role="none"
-                    >
-                        {profile.name}
-                    </p>
-                    <p
-                        className="text-sm font-medium text-gray-900 truncate"
-                        role="none"
-                    >
-                        {profile.email}
-                    </p>
-                </div>
-                <ul className="py-1" role="none">
-                    <li>
-                        <Link
-                            to="/"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            role="menuitem"
-                        >
-                            Home
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            to="/profile"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            role="menuitem"
-                        >
-                            Profile
-                        </Link>
-                    </li>
-                    <li>
-                        <button
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            role="menuitem"
-                            onClick={() => { localStorage.setItem('authtoken', null); window.location.href = '/' }}
-                        >
-                            Sign out
-                        </button>
-                    </li>
-                </ul>
-            </div>}
+
 
             {/* Sidebar */}
             <aside
-                id="logo-sidenav"
-                className={"bg-gray-800 border-gray-700 fixed z-50 w-72 inset-0 my-4 ml-4 h-[calc(100%-32px)] rounded-xl md:translate-x-0 transition-transform " + (sidenav ? "-translate-x-0" : "-translate-x-80")}
+                id="sidebar"
+                className="bg-gray-800 border-gray-700 fixed z-50 w-72 inset-0 my-4 ml-4 h-[calc(100%-32px)] rounded-xl transition-transform -translate-x-80 md:translate-x-0"
                 aria-label="Layout"
             >
                 <div className="relative border-b border-white/20">
@@ -143,8 +185,7 @@ const Layout = () => {
                     </div>
                     <button
                         className="md:hidden font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-8 max-w-[32px] h-8 max-h-[32px] rounded-lg text-xs text-white hover:bg-white/10 active:bg-white/30 absolute right-0 top-0 grid rounded-br-none rounded-tl-none xl:hidden"
-                        type="button"
-                        onClick={toggleSideNav}
+                        id='sidebarbutton1'
                     >
                         <span className="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
                             <svg
@@ -171,7 +212,7 @@ const Layout = () => {
                         <li>
                             <Link aria-current="page" className="active" to="/">
                                 <button
-                                    className={"middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg capitalize w-full flex items-center gap-4 px-4 text-white " + (location.pathname == '/'||location.pathname.startsWith('/subject')? 'bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]' : 'hover:bg-white/10 active:bg-white/30')}
+                                    className={"middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg capitalize w-full flex items-center gap-4 px-4 text-white " + (location.pathname == '/' ? 'bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]' : 'hover:bg-white/10 active:bg-white/30')}
                                     type="button"
                                 >
                                     <svg
