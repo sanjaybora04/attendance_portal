@@ -22,6 +22,7 @@ router.post('/signup', [
   try {
 
     const doc = await OTP.findOne({ email: req.body.email })
+    if(doc){
     if (req.body.otp == doc.otp) {
       const docs = await Teacher.findOne({ email: req.body.email })
       if (docs) {
@@ -55,6 +56,10 @@ router.post('/signup', [
     else {
       res.json({ alert: "Incorrect Otp!" })
     }
+  }
+  else{
+    res.json({alert:"Click on Get Otp"})
+  }
 
   } catch (err) {
     console.log(err)
@@ -75,6 +80,7 @@ router.post('/login', [
   try {
     // section : uncomment this section to disable otp verification
     const doc = await OTP.findOne({ email: req.body.email })
+    if(doc){
     if (req.body.otp == doc.otp) {
     // section
       let teacher = await Teacher.findOne({ email: req.body.email })
@@ -101,6 +107,9 @@ router.post('/login', [
     else {
       res.json({ alert: "Incorrect Otp!" })
     }
+  }else{
+    res.json({alert:"Click on Get Otp"})
+  }
     // section
   } catch (err) {
     console.log(err)

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 
 const api = axios.create({
@@ -13,11 +14,11 @@ const api = axios.create({
 api.interceptors.response.use(
   response => {
     if (response.data.alert) {
-      alert(response.data.alert)
+      toast(response.data.alert)
     }
     if (response.data.alerts){
       const alerts = response.data.alerts.map(alert=>alert.msg)
-      alert(alerts.join('\n'))
+      toast(alerts.join('\n'))
     }
     return response
   },
@@ -26,21 +27,5 @@ api.interceptors.response.use(
     console.log("Network Error!")
   }
 );
-
-const alert = (alert)=>{
-  const alertDiv = document.createElement('div')
-  alertDiv.classList.add('fixed','text-center','left-1/2','-translate-x-1/2','bottom-0','bg-gray-800','text-white','p-2','mb-5','rounded-md','transition-opacity','duration-500','opacity-100')
-  alertDiv.innerText=alert
-  
-  document.body.appendChild(alertDiv)
-
-  setTimeout(()=>{
-    alertDiv.classList.remove('opacity-100')
-    alertDiv.classList.add('opacity-0')
-    setTimeout(()=>{
-      alertDiv.remove()
-    },500)
-  },3000)
-}
 
 export default api

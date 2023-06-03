@@ -2,6 +2,8 @@ import { useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux'
 import { getProfile,getSubjects } from './redux/profileReducer';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Layout from './layout';
 import Home from './home/index';
@@ -28,6 +30,7 @@ const App = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </Router>
   )
 }

@@ -23,6 +23,7 @@ router.post('/signup', [
 
   try {
     const doc = await OTP.findOne({ email: req.body.email, otp: req.body.otp })
+    if(doc){
     if (req.body.otp == doc.otp) {
       const student = await Student.findOne({ email: req.body.email })
       if (student) {
@@ -56,6 +57,10 @@ router.post('/signup', [
     else {
       res.json({ alert: "Incorrect Otp!" })
     }
+  }
+  else{
+    res.json({alert:"Click on Get Otp"})
+  }
 
   } catch (err) {
     console.log(err)
@@ -78,30 +83,35 @@ router.post('/login', [
   try {
     // section : uncomment this section to disable otp verification
     const doc = await OTP.findOne({ email: req.body.email, otp: req.body.otp })
-    if (req.body.otp == doc.otp) {
-    // section
-      let student = await Student.findOne({ email: req.body.email })
-      if (student) {
-        const match = await bcrypt.compare(req.body.password, student.password)
-        if (match) {
-          student = {
-            _id: student._id,
-            usertype: 'student'
+    if (doc) {
+      if (req.body.otp == doc.otp) {
+        // section
+        let student = await Student.findOne({ email: req.body.email })
+        if (student) {
+          const match = await bcrypt.compare(req.body.password, student.password)
+          if (match) {
+            student = {
+              _id: student._id,
+              usertype: 'student'
+            }
+            const authtoken = jwt.sign(student, JWT_SECRET);
+            res.json({ authtoken })
           }
-          const authtoken = jwt.sign(student, JWT_SECRET);
-          res.json({ authtoken })
+          else {
+            res.json({ alert: "Incorrect Password" })
+          }
         }
         else {
-          res.json({ alert: "Incorrect Password" })
+          res.json({ alert: "Email not found!!!" })
         }
+        // secton uncomment this section to disable otp verification
       }
       else {
-        res.json({ alert: "Email not found!!!" })
+        res.json({ alert: "Incorrect Otp!" })
       }
-    // secton uncomment this section to disable otp verification
     }
     else {
-      res.json({ alert: "Incorrect Otp!" })
+      res.json({ alert: "Click on get otp" })
     }
     // section 
 
