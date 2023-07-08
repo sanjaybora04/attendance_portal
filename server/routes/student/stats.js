@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const fetchuser = require('../../middleware/fetchuser')
+const fetchuser = require('../../middleware/auth-check')
 const Attendance = require("../../db/models/attendancemodel");
 
 // get attendance percentage

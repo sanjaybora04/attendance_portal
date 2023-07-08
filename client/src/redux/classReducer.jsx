@@ -2,40 +2,40 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import api from '/src/api'
 
 
-const getSubject = createAsyncThunk(
-  'user/getSubject',
-  (subject_id) => {
-    return api.post('/teacher/getStudents', { subject_id })
+const getClass = createAsyncThunk(
+  'user/getClass',
+  (class_id) => {
+    return api.post('/getStudents', { class_id })
       .then((response) => response.data)
   }
 )
 
 const initialState = {
-  subject: {},
+  class: {},
   addedStudents:[],
   allStudents: [],
   loading: false,
   error: ''
 }
 
-export const studentsSlice = createSlice({
-  name: 'subject',
+export const classSlice = createSlice({
+  name: 'class',
   initialState,
   extraReducers: (builder) => {
 
-    builder.addCase(getSubject.pending, state => {
+    builder.addCase(getClass.pending, state => {
       state.loading = true
     })
 
-    builder.addCase(getSubject.fulfilled, (state, action) => {
+    builder.addCase(getClass.fulfilled, (state, action) => {
       state.loading = false
-      state.subject = action.payload.subject
+      state.class = action.payload.class
       state.addedStudents = action.payload.addedStudents
       state.allStudents = action.payload.allStudents
       state.error = ''
     })
 
-    builder.addCase(getSubject.rejected, (state, action) => {
+    builder.addCase(getClass.rejected, (state, action) => {
       state.loading = false
       state.error = action.error.message
     })
@@ -43,6 +43,6 @@ export const studentsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export { getSubject }
+export { getClass }
 
-export default studentsSlice.reducer
+export default classSlice.reducer

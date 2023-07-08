@@ -1,23 +1,19 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const subjectSchema = new Schema({
+const classSchema = new Schema({
     name: String,
-    course: {
-        name:String,
-        semester:Number
-    },
     teacher:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'teacher'
+        ref: 'user'
     },
     teacher_name: String,
     students:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'student'
+        ref: 'user'
     }]
 });
 
-const Subject = mongoose.model('subject',subjectSchema);
+const Class = mongoose.model('class',classSchema);
 
-module.exports = Subject;
+module.exports = Class;

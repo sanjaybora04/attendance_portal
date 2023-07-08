@@ -5,15 +5,15 @@ import api from '/src/api'
 const getProfile = createAsyncThunk(
   'user/getProfile',
   () => {
-    return api.post('/teacher/getProfile')
+    return api.post('/getProfile')
       .then((response) => response.data)
   }
 )
 
-const getSubjects = createAsyncThunk(
-  'user/getSubjects',
+const getMyclasses = createAsyncThunk(
+  'user/getMyclasses',
   () => {
-    return api.post('/teacher/getSubjects')
+    return api.post('/getMyclasses')
       .then((response) => response.data)
   }
 )
@@ -23,14 +23,13 @@ const initialState = {
   error: null,
   name: '',
   email: '',
-  eno: '',
   image: '',
-  course: {},
-  subjects: []
+  classes: [],
+  myclasses: []
 }
 
-export const studentsSlice = createSlice({
-  name: 'students',
+export const userSlice = createSlice({
+  name: 'user',
   initialState,
   extraReducers: (builder) => {
     // Get Profile
@@ -39,11 +38,9 @@ export const studentsSlice = createSlice({
     })
     builder.addCase(getProfile.fulfilled, (state, action) => {
       state.loading = false
-      state.name = action.payload.name
+      state.name = action.payload.firstName+" "+action.payload.lastName
       state.email = action.payload.email
-      state.eno = action.payload.enrollment_number
-      state.image = action.payload.image
-      state.course = action.payload.course
+      state.image = action.payload.profilePicture
       state.error = null
     })
     builder.addCase(getProfile.rejected, (state, action) => {
@@ -51,18 +48,18 @@ export const studentsSlice = createSlice({
       state.error = action.error.message
     })
     // Get Subjects
-    builder.addCase(getSubjects.pending, state => {
+    builder.addCase(getMyclasses.pending, state => {
       state.loading = true
     })
-    builder.addCase(getSubjects.fulfilled, (state, action) => {
+    builder.addCase(getMyclasses.fulfilled, (state, action) => {
       state.loading = false
-      state.subjects = action.payload
+      state.myclasses = action.payload
       state.error = null
     })
   },
 })
 
 // Action creators are generated for each case reducer function
-export { getProfile, getSubjects }
+export { getProfile, getMyclasses }
 
-export default studentsSlice.reducer
+export default userSlice.reducer

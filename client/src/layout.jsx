@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import Cookies from 'universal-cookie'
 
-// TODO: if user clicks outside the sidenav then sidenav should collapse, same for the user dropdown
+const cookie = new Cookies
+
 
 const Layout = () => {
     const profile = useSelector(state => state.profile)
@@ -62,6 +64,7 @@ const Layout = () => {
 
     return (
         <>
+
             <nav className="fixed top-0 z-60 w-full bg-blue-50">
                 <div className="px-3 py-3 lg:px-5 lg:pl-3">
                     <div className="flex items-center justify-between">
@@ -156,7 +159,7 @@ const Layout = () => {
                                             <button
                                                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                 role="menuitem"
-                                                onClick={() => { localStorage.setItem('authtoken', null); window.location.href = '/' }}
+                                                onClick={() => { cookie.remove('token'); window.location.href = '/' }}
                                             >
                                                 Sign out
                                             </button>
@@ -260,7 +263,7 @@ const Layout = () => {
                             <button
                                 className="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize"
                                 type="button"
-                                onClick={() => { localStorage.setItem('authtoken', null); window.location.href = '/' }}
+                                onClick={() => { cookie.remove('token'); window.location.href = '/' }}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-inherit">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
@@ -274,6 +277,13 @@ const Layout = () => {
                     </ul>
                 </div>
             </aside>
+            <div className="bg-blue-50 h-screen">
+                <div className="p-4 md:ml-80">
+                    <div className="p-4 mt-14">
+                        <Outlet />
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

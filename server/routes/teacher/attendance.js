@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const Attendance = require('../../db/models/attendancemodel');
-const Subject = require('../../db/models/subjectmodel')
-const fetchuser = require('../../middleware/fetchuser')
+const Subject = require('../../db/models/classmodel')
+const fetchuser = require('../../middleware/auth-check')
 
 
 router.post('/takeAttendance', fetchuser, async (req, res) => {

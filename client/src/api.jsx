@@ -1,24 +1,38 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import Cookies from 'universal-cookie';
 
+const cookie = new Cookies
 
 const api = axios.create({
-    baseURL: 'https://192.168.1.7:5000',
+    baseURL:'http://localhost:5000',
     timeout: 10000,
     headers: {
       'Content-Type': 'application/json',
-      'authtoken': localStorage.getItem("authtoken")
+      'token': cookie.get("token")
     }
 });
 
 api.interceptors.response.use(
   response => {
-    if (response.data.alert) {
-      toast(response.data.alert)
+    if (response.data.info) {
+      toast.info(response.data.info)
+    }
+    if (response.data.success) {
+      toast.success(response.data.success)
+    }
+    if (response.data.warn) {
+      toast.warn(response.data.warn)
+    }
+    if (response.data.error) {
+      toast.error(response.data.error)
     }
     if (response.data.alerts){
       const alerts = response.data.alerts.map(alert=>alert.msg)
       toast(alerts.join('\n'))
+    }
+    if (response.data.notloggedin && window.location.pathname!='/signin'){
+      window.location.pathname = '/signin'
     }
     return response
   },

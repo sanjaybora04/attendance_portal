@@ -1,26 +1,36 @@
-import { useEffect, useState } from "react";
-import NotLoggedIn from './components/notLoggedIn/app'
-import Student from './components/student/index'
-import Teacher from './components/teacher/index'
-import api from '/src/api'
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux'
+import { getProfile, getMyclasses } from './redux/profileReducer';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function App() {
-  const [user, setUser] = useState('')
-  const getUser = () => {
-    api.post('/getuser')
-      .then(response=> {
-        setUser(response.data.usertype)
-    })
-  }
+import Layout from './layout';
+import Home from './home';
+import Profile from './profile'
+import Class from './class'
+import Signin from './auth/signin';
+
+
+const App = () => {
+  const dispatch = useDispatch()
   useEffect(() => {
-    getUser()
-  })
-
-  switch (user) {
-    case 'student': return <Student />
-    case 'teacher': return <Teacher />
-    default: return <NotLoggedIn />
-  }
+    dispatch(getProfile())
+    dispatch(getMyclasses())
+  }, [])
+  return (
+    <Router>
+      <Routes>
+        <Route exact path='/signin' element={<Signin />}></Route>
+        <Route element={<Layout />}>
+          <Route exact path='/' element={<Home />}></Route>
+          <Route exact path='/class/:classId' element={<Class />}></Route>
+          <Route exact path='/profile' element={<Profile />}></Route>
+        </Route>
+      </Routes>
+      <ToastContainer />
+    </Router>
+  )
 }
 
-export default App;
+export default App

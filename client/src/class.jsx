@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMatch } from 'react-router-dom'
-import { getSubject } from './redux/subjectReducer'
+import { getClass } from './redux/classReducer'
 import api from '/src/api'
 
 const Subject = () => {
-    const match = useMatch('/subject/:subjectId');
-    const subject_id = match?.params?.subjectId || '';
+    const match = useMatch('/class/:classId');
+    const class_id = match?.params?.classId || '';
     const dispatch = useDispatch()
 
-    const subject = useSelector(state => state.subject)
+    const clas = useSelector(state => state.class)
     const [editStudents, setEditStudents] = useState(false)
     const [addedStudents, setAddedStudents] = useState([])
 
     const getList = () => {
-        api.post('teacher/attendancelist',{subject_id})
+        api.post('teacher/attendancelist',{class_id})
             .then(response => {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', subject.subject.name+'.csv');
+                link.setAttribute('download', clas.clas.name+'.csv');
                 document.body.appendChild(link);
                 link.click();
             })
@@ -40,19 +40,19 @@ const Subject = () => {
         setEditStudents(false)
 
         api.post('/teacher/updateStudents', {
-            subject_id,
+            class_id,
             students: addedStudents
         }).then((response) => {
-            dispatch(getSubject(subject_id))
+            dispatch(getClass(class_id))
         })
     }
 
     useEffect(() => {
-        setAddedStudents(subject.addedStudents.map(student => student._id))
-    }, [subject])
+        setAddedStudents(clas.addedStudents.map(student => student._id))
+    }, [clas])
 
     useEffect(() => {
-        dispatch(getSubject(subject_id))
+        dispatch(getClass(class_id))
     }, [])
 
     return (
@@ -96,7 +96,7 @@ const Subject = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {subject.allStudents.map(student => {
+                                    {clas.allStudents.map(student => {
                                         return <tr key={student._id} className="flex justify-between">
                                             <td className="border-b w-1/3 py-3 px-5 text-left">
                                                 <p className="block antialiased font-sans text-[11px] font-bold">
@@ -157,7 +157,7 @@ const Subject = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {subject.addedStudents.map(student => {
+                        {clas.addedStudents.map(student => {
                             return <tr className='flex justify-between'>
                                 <td className="py-3 px-5 w-1/2 border-b border-blue-gray-50">
                                     <p className="block antialiased font-sans text-sm leading-normal text-gray-500 font-semibold">

@@ -160,7 +160,7 @@ const Profile = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        api.post('/teacher/updateProfile', { name, image })
+        api.post('/updateProfile', { name, image })
             .then(response => {
                 dispatch(getProfile())
             })

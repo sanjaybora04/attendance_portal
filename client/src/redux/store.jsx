@@ -1,11 +1,11 @@
 import {configureStore} from '@reduxjs/toolkit'
 import profileReducer from './profileReducer'
-import subjectReducer from './subjectReducer'
+import classReducer from './classReducer'
 
 
 export default configureStore({
     reducer: {
         profile: profileReducer,
-        subject: subjectReducer
+        class: classReducer
     }
 })

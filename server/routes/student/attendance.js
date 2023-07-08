@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const fetchuser = require("../../middleware/fetchuser")
+const fetchuser = require("../../middleware/auth-check")
 const location = require('../../config/keys').location
 
-const Subject = require('../../db/models/subjectmodel')
+const Subject = require('../../db/models/classmodel')
 const Attendance = require("../../db/models/attendancemodel")
 
 
